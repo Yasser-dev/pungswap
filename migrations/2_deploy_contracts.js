@@ -7,7 +7,7 @@ module.exports = async function (deployer) {
   const token = await Token.deployed();
 
   // Deploy Pungswap
-  await deployer.deploy(PungSwap);
+  await deployer.deploy(PungSwap, token.address);
   const pungSwap = await PungSwap.deployed();
 
   // transfer all tokens to PungSwap
