@@ -5,6 +5,7 @@ import Navbar from "./components/Navbar";
 import PungSwap from "./abis/PungSwap.json";
 import Token from "./abis/Token.json";
 import Loader from "./components/Loader";
+import Main from "./components/Main";
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -14,6 +15,7 @@ class App extends React.Component {
       account: "",
       ethBalance: "0",
       pungBalance: "0",
+      loading: false,
     };
   }
 
@@ -81,7 +83,14 @@ class App extends React.Component {
       <div>
         <Navbar account={this.state.account} />
         <div className="flex justify-center p-10 ">
-          <Loader />
+          {this.state.loading ? (
+            <Loader />
+          ) : (
+            <Main
+              ethBalance={this.state.ethBalance}
+              pungBalance={this.state.pungBalance}
+            />
+          )}
         </div>
       </div>
     );
