@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import pungcoinLogo from "../assets/pungcoin.png";
 import etherLogo from "../assets/eth-logo.png";
 const BuyForm = ({ ethBalance, pungBalance, buyPung }) => {

@@ -6,6 +6,8 @@ import PungSwap from "./abis/PungSwap.json";
 import Token from "./abis/Token.json";
 import Loader from "./components/Loader";
 import Main from "./components/Main";
+import BuyForm from "./components/BuyForm";
+import SellForm from "./components/SellForm";
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -109,12 +111,18 @@ class App extends React.Component {
           {this.state.loading ? (
             <Loader />
           ) : (
-            <Main
-              ethBalance={this.state.ethBalance}
-              pungBalance={this.state.pungBalance}
-              buyPung={this.buyPung}
-              sellPung={this.sellPung}
-            />
+            <Main>
+              <BuyForm
+                ethBalance={this.state.ethBalance}
+                pungBalance={this.state.pungBalance}
+                buyPung={this.buyPung}
+              />
+              <SellForm
+                ethBalance={this.state.ethBalance}
+                pungBalance={this.state.pungBalance}
+                sellPung={this.sellPung}
+              />
+            </Main>
           )}
         </div>
       </div>

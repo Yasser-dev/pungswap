@@ -1,8 +1,6 @@
-import React, { useState } from "react";
+import { useState } from "react";
 
-import BuyForm from "./BuyForm";
-import SellForm from "./SellForm";
-const Main = ({ ethBalance, pungBalance, buyPung, sellPung }) => {
+const Main = ({ children }) => {
   const [status, setStatus] = useState("buy");
   return (
     <div>
@@ -35,19 +33,7 @@ const Main = ({ ethBalance, pungBalance, buyPung, sellPung }) => {
           Sell
         </button>
       </div>
-      {status === "buy" ? (
-        <BuyForm
-          ethBalance={ethBalance}
-          pungBalance={pungBalance}
-          buyPung={buyPung}
-        />
-      ) : (
-        <SellForm
-          ethBalance={ethBalance}
-          pungBalance={pungBalance}
-          sellPung={sellPung}
-        />
-      )}
+      {status === "buy" ? children[0] : children[1]}
     </div>
   );
 };
