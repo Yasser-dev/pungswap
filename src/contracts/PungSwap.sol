@@ -9,7 +9,14 @@ contract PungSwap {
     // Redemption rate -> 1 ether = 10000 pungcoin
     uint public rate = 10000;
 
-    event TokenPurchased(
+    event TokensPurchased(
+        address account,
+        address token,
+        uint amount,
+        uint rate
+    );
+
+    event TokensSold(
         address account,
         address token,
         uint amount,
@@ -28,8 +35,23 @@ contract PungSwap {
         // transfer tokens to user
         token.transfer(msg.sender, tokenAmount);
         // Emit an event
-        emit TokenPurchased(msg.sender, address(token), tokenAmount, rate);
+        emit TokensPurchased(msg.sender, address(token), tokenAmount, rate);
 
+    }
+
+    function sellTokens(uint _amount) public{
+
+        // user can's sell more tokens than they have
+        require(token.balanceOf(msg.sender)>=_amount, "You do not have the amount you want to sell");
+        // calculate the amount of ether to redeem
+        uint etherAmount = _amount / rate;
+         // assure there is enough ether balance in pungswap before transaction
+        require(address(this).balance>=etherAmount, "There is no enough ether to complete the transaction");
+        // perform sale
+        token.transferFrom(msg.sender, address(this), _amount);
+        msg.sender.transfer(etherAmount);     
+        // Emit an event
+        emit TokensSold(msg.sender, address(token), _amount, rate);
     }
 
 }

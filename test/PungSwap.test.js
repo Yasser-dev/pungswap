@@ -63,11 +63,48 @@ contract("PungSwap", ([deployer, investor]) => {
       pungSwapBalance = await web3.eth.getBalance(pungSwap.address);
       assert.equal(pungSwapBalance.toString(), web3.utils.toWei("1", "ether"));
 
+      // check logs to ensure event was emitted correctly
       const event = result.logs[0].args;
       assert.equal(event.account, investor);
       assert.equal(event.token, token.address);
       assert.equal(event.amount.toString(), tokens("10000").toString());
       assert.equal(event.rate, "10000");
+    });
+  });
+
+  describe("sell tokens", async () => {
+    let result;
+    before(async () => {
+      // sell tokens
+      await token.approve(pungSwap.address, tokens("10000"), {
+        from: investor,
+      });
+      result = await pungSwap.sellTokens(tokens("10000"), { from: investor });
+    });
+
+    it("Allows user to sell tokens from PungSwap for a fixed price", async () => {
+      // check investor balance after purchase
+      let investorBalance = await token.balanceOf(investor);
+      assert.equal(investorBalance.toString(), tokens("0"));
+
+      // check pungSwap pungcoin balance after purchase
+      let pungSwapBalance = await token.balanceOf(pungSwap.address);
+      assert.equal(pungSwapBalance.toString(), tokens("1000000"));
+
+      // check pungSwap ether balance after purchase
+      pungSwapBalance = await web3.eth.getBalance(pungSwap.address);
+      assert.equal(pungSwapBalance.toString(), web3.utils.toWei("0", "ether"));
+
+      // check logs to ensure event was emitted correctly
+      const event = result.logs[0].args;
+      assert.equal(event.account, investor);
+      assert.equal(event.token, token.address);
+      assert.equal(event.amount.toString(), tokens("10000").toString());
+      assert.equal(event.rate, "10000");
+
+      // Fail if investor tries to sell more tokens than they have
+      await pungSwap.sellTokens(tokens("50000"), { from: investor }).should.be
+        .rejected;
     });
   });
 });
