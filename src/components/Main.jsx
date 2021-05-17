@@ -1,10 +1,22 @@
-import React from "react";
+import React, { useState } from "react";
 import pungcoinLogo from "../assets/pungcoin.png";
 import etherLogo from "../assets/eth-logo.png";
-const Main = ({ ethBalance, pungBalance }) => {
+const Main = ({ ethBalance, pungBalance, buyPung }) => {
+  const [input, setInput] = useState(0);
+  const [output, setOutput] = useState(0);
+
+  const submitForm = (event) => {
+    event.preventDefault();
+    let etherAmount = window.web3.utils.toWei(input.toString(), "ether");
+    buyPung(etherAmount);
+  };
+
   return (
     <div>
-      <form className="flex flex-col items-center justify-center max-w-md px-10 py-12 bg-white rounded-lg shadow-lg">
+      <form
+        className="flex flex-col items-center justify-center max-w-md px-10 py-12 bg-white rounded-lg shadow-lg"
+        onSubmit={submitForm}
+      >
         <div className="w-96">
           <div className="flex justify-between">
             <label className="text-lg font-bold" htmlFor="input">
@@ -19,7 +31,13 @@ const Main = ({ ethBalance, pungBalance }) => {
             <input
               className="w-full p-2 px-3 text-sm text-gray-600 border border-gray-400 rounded-l rounded-r-none field"
               name="input"
+              step="any"
               type="number"
+              placeholder="0"
+              onChange={(event) => {
+                setInput(event.target.value);
+                setOutput(event.target.value * 10000);
+              }}
             />
             <span className="flex items-center justify-center p-3 px-5 font-bold text-center text-gray-200 bg-gray-400 rounded-l-none rounded-r w-28">
               <img className="w-6 mr-1" src={etherLogo} alt="ether logo" />
@@ -41,7 +59,8 @@ const Main = ({ ethBalance, pungBalance }) => {
               className="w-full p-2 px-3 text-sm text-gray-600 bg-gray-300 border border-gray-400 rounded-l rounded-r-none field"
               name="output"
               type="number"
-              value="0"
+              value={output}
+              placeholder="0"
               disabled
             />
             <span className="flex items-center justify-center p-3 px-5 font-bold text-center text-gray-200 bg-gray-400 rounded-l-none rounded-r w-28">

@@ -15,7 +15,7 @@ class App extends React.Component {
       account: "",
       ethBalance: "0",
       pungBalance: "0",
-      loading: false,
+      loading: true,
     };
   }
 
@@ -69,16 +69,27 @@ class App extends React.Component {
     const pungSwapNetwork = PungSwap.networks[networkId];
     if (pungSwapNetwork) {
       const pungSwap = new web3.eth.Contract(
-        Token.abi,
+        PungSwap.abi,
         pungSwapNetwork.address
       );
       this.setState({ pungSwap });
     } else {
       window.alert("PungSwap Contract is not deployed to detected network.");
     }
+
+    this.setState({ loading: false });
   }
 
+  buyPung = (ethAmount) => {
+    this.setState({ loading: true });
+    this.state.pungSwap.methods
+      .buyTokens()
+      .send({ value: ethAmount, from: this.state.account })
+      .on("transactionHash", (hash) => this.setState({ loading: false }));
+  };
+
   render() {
+    console.log("PUNGSWAP", this.state.pungSwap);
     return (
       <div>
         <Navbar account={this.state.account} />
@@ -89,6 +100,7 @@ class App extends React.Component {
             <Main
               ethBalance={this.state.ethBalance}
               pungBalance={this.state.pungBalance}
+              buyPung={this.buyPung}
             />
           )}
         </div>
