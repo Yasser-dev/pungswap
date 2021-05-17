@@ -9,6 +9,7 @@ class App extends React.Component {
     super(props);
     this.state = {
       token: {},
+      pungSwap: {},
       account: "",
       ethBalance: "0",
       pungBalance: "0",
@@ -44,8 +45,9 @@ class App extends React.Component {
     const ethBalance = await web3.eth.getBalance(this.state.account);
     this.setState({ ethBalance });
 
-    //load token
     const networkId = await web3.eth.net.getId();
+
+    //load token
     const tokenNetwork = Token.networks[networkId];
     if (tokenNetwork) {
       const token = new web3.eth.Contract(Token.abi, tokenNetwork.address);
@@ -58,6 +60,18 @@ class App extends React.Component {
       this.setState({ pungBalance: pungBalance.toString() });
     } else {
       window.alert("Contract is not deployed to detected network.");
+    }
+
+    //load PungSwap
+    const pungSwapNetwork = PungSwap.networks[networkId];
+    if (pungSwapNetwork) {
+      const pungSwap = new web3.eth.Contract(
+        Token.abi,
+        pungSwapNetwork.address
+      );
+      this.setState({ pungSwap });
+    } else {
+      window.alert("PungSwap Contract is not deployed to detected network.");
     }
   }
 
