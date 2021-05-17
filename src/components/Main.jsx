@@ -1,89 +1,53 @@
 import React, { useState } from "react";
-import pungcoinLogo from "../assets/pungcoin.png";
-import etherLogo from "../assets/eth-logo.png";
-const Main = ({ ethBalance, pungBalance, buyPung }) => {
-  const [input, setInput] = useState(0);
-  const [output, setOutput] = useState(0);
 
-  const submitForm = (event) => {
-    event.preventDefault();
-    let etherAmount = window.web3.utils.toWei(input.toString(), "ether");
-    buyPung(etherAmount);
-  };
-
+import BuyForm from "./BuyForm";
+import SellForm from "./SellForm";
+const Main = ({ ethBalance, pungBalance, buyPung, sellPung }) => {
+  const [status, setStatus] = useState("buy");
   return (
     <div>
-      <form
-        className="flex flex-col items-center justify-center max-w-md px-10 py-12 bg-white rounded-lg shadow-lg"
-        onSubmit={submitForm}
-      >
-        <div className="w-96">
-          <div className="flex justify-between">
-            <label className="text-lg font-bold" htmlFor="input">
-              Input
-            </label>
-            <h2 className="text-gray-600">
-              Balance: {window.web3.utils.fromWei(ethBalance, "ether")}
-            </h2>
-          </div>
-
-          <span className="flex mb-5 text-xs shadow-md">
-            <input
-              className="w-full p-2 px-3 text-sm text-gray-600 border border-gray-400 rounded-l rounded-r-none field"
-              name="input"
-              step="any"
-              type="number"
-              placeholder="0"
-              onChange={(event) => {
-                setInput(event.target.value);
-                setOutput(event.target.value * 10000);
-              }}
-            />
-            <span className="flex items-center justify-center p-3 px-5 font-bold text-center text-gray-200 bg-gray-400 rounded-l-none rounded-r w-28">
-              <img className="w-6 mr-1" src={etherLogo} alt="ether logo" />
-              <h4>ETH</h4>
-            </span>
-          </span>
-        </div>
-        <div className="w-96">
-          <div className="flex justify-between">
-            <label className="text-lg font-bold" htmlFor="output">
-              Output
-            </label>
-            <h2 className="text-gray-600">
-              Balance: {window.web3.utils.fromWei(pungBalance, "ether")}
-            </h2>
-          </div>
-          <span className="flex mb-2 text-xs shadow-md">
-            <input
-              className="w-full p-2 px-3 text-sm text-gray-600 bg-gray-300 border border-gray-400 rounded-l rounded-r-none field"
-              name="output"
-              type="number"
-              value={output}
-              placeholder="0"
-              disabled
-            />
-            <span className="flex items-center justify-center p-3 px-5 font-bold text-center text-gray-200 bg-gray-400 rounded-l-none rounded-r w-28">
-              <img
-                className="w-6 mr-1"
-                src={pungcoinLogo}
-                alt="pungcoin logo"
-              />
-              <h4> PUNG</h4>
-            </span>
-          </span>
-        </div>
-        <div className="flex justify-between w-full mb-4">
-          <h2 className="text-gray-600">Exchange rate</h2>
-          <h2 className="text-gray-600">1 ETH = 10000 PUNG</h2>
-        </div>
+      <div className="flex justify-between mb-2">
         <button
-          type="submit"
-          className="w-full p-2 px-5 text-lg text-white bg-gray-700 rounded hover:bg-gray-600 btn"
+          className={`inline-block  rounded shadow ripple px-6 py-2 text-xs font-medium leading-6 text-center text-black uppercase transition  ${
+            status === "buy"
+              ? "cursor-not-allowed bg-gray-300 outline-none"
+              : "bg-gray-100 hover:shadow-lg hover:bg-gray-200 focus:outline-none"
+          }`}
+          onClick={() => {
+            if (status == "sell") setStatus("buy");
+          }}
         >
-          SWAP
+          Buy
         </button>
-      </form>
+        <button onClick={() => setStatus(status === "buy" ? "sell" : "buy")}>
+          ⇆
+        </button>
+        <button
+          className={`inline-block  rounded shadow ripple px-6 py-2 text-xs font-medium leading-6 text-center text-black uppercase transition  ${
+            status === "sell"
+              ? "cursor-not-allowed bg-gray-300 outline-none"
+              : "bg-gray-100 hover:shadow-lg hover:bg-gray-200 focus:outline-none"
+          }`}
+          onClick={() => {
+            if (status == "buy") setStatus("sell");
+          }}
+        >
+          Sell
+        </button>
+      </div>
+      {status === "buy" ? (
+        <BuyForm
+          ethBalance={ethBalance}
+          pungBalance={pungBalance}
+          buyPung={buyPung}
+        />
+      ) : (
+        <SellForm
+          ethBalance={ethBalance}
+          pungBalance={pungBalance}
+          sellPung={sellPung}
+        />
+      )}
     </div>
   );
 };

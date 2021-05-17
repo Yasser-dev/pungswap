@@ -88,8 +88,20 @@ class App extends React.Component {
       .on("transactionHash", (hash) => this.setState({ loading: false }));
   };
 
+  sellPung = (pungAmount) => {
+    this.setState({ loading: true });
+    this.state.token.methods
+      .approve(this.state.pungSwap._address, pungAmount)
+      .send({ from: this.state.account })
+      .on("transactionHash", (hash) =>
+        this.state.pungSwap.methods
+          .sellTokens(pungAmount)
+          .send({ from: this.state.account })
+          .on("transactionHash", (hash) => this.setState({ loading: false }))
+      );
+  };
+
   render() {
-    console.log("PUNGSWAP", this.state.pungSwap);
     return (
       <div>
         <Navbar account={this.state.account} />
@@ -101,6 +113,7 @@ class App extends React.Component {
               ethBalance={this.state.ethBalance}
               pungBalance={this.state.pungBalance}
               buyPung={this.buyPung}
+              sellPung={this.sellPung}
             />
           )}
         </div>
