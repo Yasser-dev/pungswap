@@ -8,7 +8,7 @@
 
 ## Description
 
-PungSwap is an ethereum exchange platform that is used to swap a ERC20 token called Pungcoin. Pungcoin is a cryptocurrency named after pungsan dog breed. Pungswap is used to swap ether for pungcoin or vice versa.
+PungSwap is an ethereum exchange platform that is used to swap an ERC20 token called Pungcoin. Pungcoin is a cryptocurrency named after the Korean dog breed Pungsan (coin logo design inspired by Dogecoin 😜). Pungswap is an exchange platform that's used to swap ether for pungcoin or vice versa.
 
 <p align="center">
         <img src="src/assets/pungcoin.png" alt="pungcoin"  height="200">
